@@ -1,0 +1,350 @@
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1" name="viewport" />
+  <title>My Bubu</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background: linear-gradient(to right, #8B4513 50%, #FFFFFF 50%); /* Brown and white background */
+      margin: 0; /* Remove default margin */
+      height: 100vh; /* Full height */
+      position: relative; /* Position relative for absolute positioning of logos */
+    }
+    @keyframes fade {
+      0% {
+        opacity: 0;
+      }
+      100% {
+        opacity: 1;
+      }
+    }
+    @keyframes fadeUp {
+      0% {
+        opacity: 0;
+        transform: translateY(20px) scale(0.8) rotate(-10deg); /* Start smaller and rotated */
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1) rotate(0deg); /* End at normal size and no rotation */
+      }
+    }
+    @keyframes slideAndFade {
+      0% {
+        transform: translateX(-100%);
+        opacity: 1;
+      }
+      100% {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+    }
+    .logo {
+      position: absolute;
+      top: 20px; /* Adjust as needed */
+      width: 100px; /* Set logo width */
+      height: auto; /* Maintain aspect ratio */
+    }
+    .logo-left {
+      left: 20px; /* Position on the left */
+    }
+    .logo-right {
+      right: 20px; /* Position on the right */
+    }
+    .slideshow {
+      position: relative;
+      max-width: 600px; /* Set max width for the slideshow */
+      margin: auto;
+      overflow: hidden; /* Hide overflow to prevent showing images outside the container */
+      height: 400px; /* Fixed height for the slideshow */
+    }
+    .slides {
+      display: none; /* Hide all slides by default */
+      animation: fade 1s; /* Apply fade animation */
+    }
+    .active {
+      display: block; /* Show the active slide */
+    }
+    .slides img {
+      width: 100%; /* Make image take full width of the container */
+      height: 100%; /* Make image take full height of the container */
+      object-fit: cover; /* Cover the container while maintaining aspect ratio */
+    }
+    .animated-letter {
+      display: inline-block;
+      opacity: 0;
+      animation-name: fadeUp;
+      animation-fill-mode: forwards;
+      animation-duration: 0.5s;
+      font-size: 3rem; /* Increase font size */
+      color: #e63946; /* Optional: Change color for a romantic feel */
+    }
+    .dot-container {
+      text-align: center; /* Center the dots */
+      margin-top: 10px;
+    }
+    .dot {
+      height: 15px;
+      width: 15px;
+      margin: 0 5px;
+      background-color: #bbb;
+      border-radius: 50%;
+      display: inline-block;
+      cursor: pointer;
+      transition: background-color 0.6s ease;
+    }
+    .active-dot {
+      background-color: #717171;
+    }
+    /* Heart styles */
+    .heart {
+      position: absolute;
+      width: 100px; /* Width of the heart */
+      height: 100px; /* Height of the heart */
+      background-color: red; /* Default color */
+      clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%); /* Heart shape */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white; /* Text color */
+      font-weight: bold; /* Text weight */
+      font-size: 14px; /* Text size */
+      border-radius: 10px; /* Optional: Rounded corners */
+      display: none; /* Hidden by default */
+    }
+    /* Heart container styles */
+    .heart-container {
+      position: relative; /* Position relative to allow absolute positioning of heart */
+      height: 150px; /* Set height for the heart container */
+      margin-bottom: 20px; /* Space below the heart container */
+      border: none; /* Optional: Border for visibility */
+      overflow: hidden; /* Prevent heart from going outside the container */
+    }
+    /* Modal styles */
+    .modal {
+      display: none; /* Hidden by default */
+      position: fixed; /* Stay in place */
+      z-index: 1000; /* Sit on top */
+      left: 0;
+      top: 0;
+      width: 100%; /* Full width */
+      height: 100%; /* Full height */
+      overflow: auto; /* Enable scroll if needed */
+      background-color: rgb(0,0,0); /* Fallback color */
+      background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+      padding-top: 60px; /* Location of content */
+    }
+    .modal-content {
+      background-color: #fefefe;
+      margin: 5% auto; /* 15% from the top and centered */
+      padding: 20px;
+      border: 1px solid #888;
+      width: 300px; /* Could be more or less, depending on screen size */
+      text-align: center;
+    }
+    .close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+    }
+    .close:hover,
+    .close:focus {
+      color: black;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    /* Message styles */
+    .message {
+      position: absolute;
+      top: 50%; /* Center vertically */
+      left: 0; /* Start from the left */
+      font-size: 2rem; /* Increase font size */
+      font-weight: bold; /* Make it bold */
+      color: #000000; /* Optional: Change color for messages */
+      white-space: nowrap; /* Prevent line breaks */
+      animation: slideAndFade 5s forwards; /* Slide and fade animation */
+    }
+  </style>
+</head>
+<body>
+  <div class="max-w-5xl mx-auto px-4 py-10">
+    <!-- Logos -->
+    <img src="dudu.png" alt="Logo Left" class="logo logo-left" />
+    <img src="bobo.png" alt="Logo Right" class="logo logo-right" />
+
+    <!-- Heart container -->
+    <div class="heart-container" id="heartContainer">
+      <div id="heart" class="heart" onclick="createHeart()">
+        Click Here
+      </div>
+    </div>
+
+    <h1 class="italic font-serif text-3xl text-black mb-10">
+      <span id="animated-text"></span>
+    </h1>
+    
+    <div class="slideshow">
+         <img class="slides active" src="album/pic0.jpg" alt="Image 1" />
+
+      <img class="slides" src="album/pic2.jfif" alt="Image 2" />
+      <img class="slides" src="album/pic3.JPG" alt="Image 3" />
+      <img class="slides" src="album/pic4.JPG" alt="Image 4" />
+      
+    </div>
+    
+    <div class="dot-container">
+      <span class="dot active-dot" onclick="currentSlide(0)"></span>
+      <span class="dot" onclick="currentSlide(1)"></span>
+      <span class="dot" onclick="currentSlide(2)"></span>
+      <span class="dot" onclick="currentSlide(3)"></span>
+    </div>
+  </div>
+
+  <!-- Modal for Passcode Entry -->
+  <div id="passcodeModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal()">&times;</span>
+      <h2>our monthsary/mybirthdate/myage+urage=</h2>
+      <input type="password" id="passcodeInput" placeholder="Enter passcode" />
+      <button onclick="checkPasscode()">Submit</button>
+    </div>
+  </div>
+
+  <script>
+    const text = "MY BUBU THIS IS FOR YOU! ❤︎";
+    const container = document.getElementById("animated-text");
+
+    // Split the text into characters, but replace spaces with a non-breaking space
+    text.split("").forEach((char, index) => {
+      const span = document.createElement("span");
+      span.textContent = char === " " ? "\u00A0" : char; // Use non-breaking space for actual space
+      span.classList.add("animated-letter");
+      span.style.animationDelay = `${index * 0.2}s`;
+      container.appendChild(span);
+    });
+
+    // Slideshow functionality
+    let slideIndex = 0;
+    const slides = document.querySelectorAll(".slides");
+    const dots = document.querySelectorAll(".dot");
+
+    function showSlides() {
+      slides.forEach((slide, index) => {
+        slide.classList.remove("active");
+        dots[index].classList.remove("active-dot");
+        if (index === slideIndex) {
+          slide.classList.add("active");
+          dots[index].classList.add("active-dot");
+        }
+      });
+      slideIndex = (slideIndex + 1) % slides.length; // Loop back to the first slide
+    }
+
+    function currentSlide(index) {
+      slideIndex = index;
+      showSlides();
+    }
+
+    setInterval(showSlides, 3000); // Change image every 3 seconds
+    showSlides(); // Initial call to display the first slide
+
+    // Heart functionality
+    const heart = document.getElementById("heart");
+    const colors = ["red", "pink", "purple", "orange", "blue"];
+    let colorIndex = 0;
+    let clickCount = 0; // Counter for clicks
+
+    // Encouraging messages
+    const messages = [
+      "Go Bubu!",
+      "Don't give up!",
+      "CLICK LANG NG CLICK",
+      "Malapit na!",
+      "Kunti na lang!",
+      "Keep going!",
+      "You're doing great!",
+      "Almost there!",
+      "Stay strong!",
+      "You got this!",
+      "Believe in yourself!"
+    ];
+
+    function createHeart() {
+      // Show heart and change its color
+      heart.style.display = "flex"; // Show the heart
+      heart.style.backgroundColor = colors[colorIndex % colors.length];
+      colorIndex++;
+
+      // Move heart to a random position within the heart container
+      const container = document.getElementById("heartContainer");
+      const containerWidth = container.clientWidth;
+      const containerHeight = container.clientHeight;
+      const x = Math.random() * (containerWidth - 100); // 100 is the width of the heart
+      const y = Math.random() * (containerHeight - 100); // 100 is the height of the heart
+      heart.style.transform = `translate(${x}px, ${y}px)`;
+
+      // Increment click count
+      clickCount++;
+      if (clickCount >= 10) {
+        openModal(); // Open modal after 20 clicks
+      }
+
+      // Display a random encouraging message
+      displayMessage();
+    }
+
+let currentMessageIndex = 0; // Initialize a counter for the current message index
+
+function displayMessage() {
+  // Get the current message based on the index
+  const message = messages[currentMessageIndex];
+  const messageDiv = document.createElement("div");
+  messageDiv.className = "message";
+  messageDiv.textContent = message;
+  document.body.appendChild(messageDiv);
+
+  // Start the animation
+  setTimeout(() => {
+    messageDiv.style.animation = "slideAndFade 5s forwards"; // Apply animation
+  }, 10); // Delay to ensure the animation starts after the element is added
+
+  // Remove the message after the animation ends
+  setTimeout(() => {
+    messageDiv.remove();
+  }, 5000); // Match this duration with the animation duration
+
+  // Update the index for the next message
+  currentMessageIndex++;
+  
+  // Reset the index if it exceeds the length of the messages array
+  if (currentMessageIndex >= messages.length) {
+    currentMessageIndex = 0; // Loop back to the first message
+  }
+}
+
+
+    // Modal functionality
+    function openModal() {
+      document.getElementById("passcodeModal").style.display = "block";
+    }
+
+    function closeModal() {
+      document.getElementById("passcodeModal").style.display = "none";
+    }
+
+function checkPasscode() {
+    const passcodeInput = document.getElementById("passcodeInput").value;
+    if (passcodeInput === "060152") { // Example passcode
+        window.location.href = "https://www.example.com"; // Replace with your desired link
+    } else {
+        alert("Incorrect passcode. Please try again.");
+    }
+}
+
+
+    // Show the heart initially
+    createHeart();
+  </script>
+</body>
+</html>

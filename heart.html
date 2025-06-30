@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Photo Album</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden; /* Prevent scrollbars */
+            position: relative; /* Position relative for absolute positioning of canvas */
+        }
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: -1; /* Send canvas to the back */
+        }
+        .album {
+            position: relative; /* Position relative for the album */
+            width: 80%;
+            max-width: 600px;
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            background-color: white;
+            z-index: 1; /* Bring album to the front */
+            margin: auto; /* Center the album */
+            padding: 20px; /* Add padding */
+        }
+        .page {
+            display: none; /* Hide all pages by default */
+            text-align: center;
+        }
+        .active {
+            display: block; /* Show the active page */
+        }
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007BFF;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        img {
+            max-width: 100%;
+            max-height: 400px; /* Set a fixed height for images */
+            height: auto; /* Maintain aspect ratio */
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <div class="album">
+        <div class="page active">
+            <h2><b>BUBU DUDU MINI ALBUM</b></h2>
+            <img id="albumImage" src="" alt="Random Image">
+        </div>
+        <div class="navigation">
+            <button id="prevBtn">Previous</button>
+            <button id="nextBtn">Next</button>
+        </div>
+    </div>
+
+    <script>
+        // Array to hold image file names
+        const imageFiles = [
+            '1711027414270.jpg',
+             '1711027424263.jpg',
+              '1711027426050.jpg',
+               '1715319515593.jpg',
+                '1723381381852.jpg',
+                 '1723381386511.jpg',
+                  '1730539417801.jpg',
+                   '1730539559285.jpg',
+                    '1730539583144.jpg',
+                     '1730539656294.jpg',
+                      '1735567225638.jpg',
+
+               '1735567346022.jpg',
+                  '1735698824762jpg',
+              
+               '1735709362455.jpg',
+
+               '1735709364922.jpg',
+
+               '1738850487775.jpg',
+            '1711027421536.jpg' // Add more image file names as needed
+        ];
+
+        // Function to get a random image
+        function getRandomImage() {
+            const randomIndex = Math.floor(Math.random() * imageFiles.length);
+            return `photo_album/${imageFiles[randomIndex]}`; // Adjust the path if necessary
+        }
+
+        // Set the initial image
+        const albumImage = document.getElementById('albumImage');
+        albumImage.src = getRandomImage();
+
+        // Navigation functionality
+        let currentImageIndex = -1; // Start with an invalid index
+
+        function showRandomImage() {
+            let newIndex;
+            do {
+                newIndex = Math.floor(Math.random() * imageFiles.length);
+            } while (newIndex === currentImageIndex); // Ensure a different image is shown
+            currentImageIndex = newIndex;
+            albumImage.src = `photo_album/${imageFiles[currentImageIndex]}`;
+        }
+
+        document.getElementById('prevBtn').addEventListener('click', showRandomImage);
+        document.getElementById('nextBtn').addEventListener('click', showRandomImage);
+
+        // Heart background functionality (same as before)
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+
+        // Set canvas size
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        // Heart properties
+        const hearts = [];
+        const colors = ['#FF69B4', '#FF1493', '#FFB6C1', '#FF4500', '#FF6347'];
+
+        // Heart class
+        class Heart {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.size = Math.random() * 20 + 10; // Random size
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+                this.speed = Math.random() * 2 + 1; // Random speed
+                this.direction = Math.random() * 2 * Math.PI; // Random direction
+            }
+
+            update() {
+                this.x += Math.cos(this.direction) * this.speed;
+                this.y += Math.sin(this.direction) * this.speed;
+
+                // Reset position if out of bounds
+                if (this.x > canvas.width || this.x < 0 || this.y > canvas.height || this.y < 0) {
+                    this.x = Math.random() * canvas.width;
+                    this.y = Math.random() * canvas.height;
+                }
+            }
+
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.moveTo(this.x, this.y);
+                ctx.bezierCurveTo(this.x - this.size / 2, this.y - this.size / 2, this.x - this.size, this.y + this.size / 2, this.x, this.y + this.size);
+                ctx.bezierCurveTo(this.x + this.size, this.y + this.size / 2, this.x + this.size / 2, this.y - this.size / 2, this.x, this.y);
+                ctx.fill();
+            }
+        }
+
+        // Create hearts
+        function createHearts(num) {
+            for (let i = 0; i < num; i++) {
+                hearts.push(new Heart(Math.random() * canvas.width, Math.random() * canvas.height));
+            }
+        }
+
+        // Animation loop for hearts
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear canvas
+            hearts.forEach(heart => {
+                heart.update();
+                heart.draw();
+            });
+            requestAnimationFrame(animate); // Call animate again
+        }
+
+        // Initialize hearts
+        createHearts(50); // Create 50 hearts
+        animate(); // Start animation
+
+        // Resize canvas on window resize
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+    </script>
+</body>
+</html>

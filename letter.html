@@ -1,0 +1,170 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Centered Square</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Background animation */
+    @keyframes gradientAnimation {
+      0% {
+        background-color: #e884ee; /* Start color */
+      }
+      50% {
+        background-color: #b434ce; /* Middle color */
+      }
+      100% {
+        background-color: #ea07de; /* End color */
+      }
+    }
+
+    body {
+      animation: gradientAnimation 10s ease infinite; /* Apply animation */
+      position: relative; /* For positioning the GIF */
+      overflow: hidden; /* Prevent scrolling */
+    }
+
+    /* Bubu Dudu Bear GIF */
+    .bear-gif {
+      position: absolute;
+      top: 50%; /* Center vertically */
+      left: 10%; /* Position on the left */
+      transform: translateY(-50%); /* Center vertically */
+      width: 150px; /* Adjust size as needed */
+      z-index: 0; /* Behind other content */
+    }
+
+    .bear2-gif {
+      position: absolute;
+      top: 50%; /* Center vertically */
+      right: 10%; /* Position on the right */
+      transform: translateY(-50%); /* Center vertically */
+      width: 150px; /* Adjust size as needed */
+      z-index: 0; /* Behind other content */
+    }
+
+    /* Modal styles */
+    .modal {
+      display: none; /* Hidden by default */
+      position: fixed; /* Stay in place */
+      z-index: 1000; /* Sit on top */
+      left: 0;
+      top: 0;
+      width: 100%; /* Full width */
+      height: 100%; /* Full height */
+      overflow: auto; /* Enable scroll if needed */
+      background-color: rgb(0,0,0); /* Fallback color */
+      background-color: rgba(0,0,0,0.7); /* Black w/ opacity */
+    }
+    .modal-content {
+      margin: 15% auto; /* 15% from the top and centered */
+      display: block;
+      max-width: 80%; /* Responsive width */
+      max-height: 80%; /* Responsive height */
+    }
+
+    /* Progress bar styles */
+    .progress-container {
+      width: 100%;
+      height: 30px;
+      background-color: rgba(255, 255, 255, 0.5);
+      border-radius: 5px;
+      overflow: hidden;
+      position: relative;
+      margin-top: 20px; /* Space above the progress bar */
+    }
+
+    .progress-bar {
+      height: 100%;
+      background-color: #ffffff; /* Blue color */
+      width: 0; /* Start at 0% */
+      animation: progressAnimation 5s linear infinite; /* Animate the width */
+    }
+
+    @keyframes progressAnimation {
+      0% {
+        width: 0;
+      }
+      100% {
+        width: 100%;
+      }
+    }
+
+    /* Running GIF styles */
+    .running-gif {
+      position: absolute;
+      top: 50%;
+      left: 0; /* Start from the left */
+      transform: translateY(-50%); /* Center vertically */
+      height: 30px; /* Adjust height as needed */
+      animation: moveGif 5s linear infinite; /* Move the GIF */
+    }
+
+    @keyframes moveGif {
+      0% {
+        left: 0; /* Start from the left */
+      }
+      100% {
+        left: 100%; /* Move to the right */
+      }
+    }
+
+    /* Link styles */
+    .link {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: rgb(0, 0, 0);
+      text-decoration: none;
+      opacity: 0; /* Start invisible */
+      transition: opacity 0.5s ease; /* Transition effect */
+    }
+    .link.visible {
+      opacity: 1; /* Make visible */
+    }
+  </style>
+</head>
+<body class="flex flex-col items-center justify-center min-h-screen">
+  <img src="dudu_hug.gif" alt="Bubu Dudu Bear" class="bear-gif" />
+  <img src="dudu_hug.gif" alt="Bubu Dudu Bear" class="bear2-gif" />
+
+  <div class="w-[400px] h-[500px] bg-gray-500 flex items-center justify-center relative z-10">
+    <img src="paper.jpg" alt="Description of image" class="w-full h-auto object-cover cursor-pointer" onclick="openModal()" />
+  </div>
+
+
+</br>
+  <!-- Progress bar container -->
+  <div class="progress-container">
+    <div class="progress-bar"></div>
+    <img src="runnning_bubu.gif" alt="Running GIF" class="running-gif" /> <!-- Add your running GIF here -->
+    <a href="https://example.com" class="link" id="myLink" target="_blank">Click here for more information</a>
+  </div>
+
+  <!-- Modal -->
+  <div id="myModal" class="modal" onclick="closeModal()">
+    <img class="modal-content" id="modalImage" />
+  </div>
+
+  <script>
+    function openModal() {
+      document.getElementById("myModal").style.display = "block";
+      document.getElementById("modalImage").src = "paper.jpg"; // Set the image source
+    }
+
+    function closeModal() {
+      document.getElementById("myModal").style.display = "none";
+    }
+
+    // Function to show the link gradually
+    function showLink() {
+      const link = document.getElementById("myLink");
+      link.classList.add("visible");
+    }
+
+    // Show the link after the progress bar completes
+    setTimeout(showLink, 5000); // 5 seconds delay
+  </script>
+</body>
+</html>
